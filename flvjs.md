@@ -2,6 +2,10 @@
 
 [中文文档](https://www.jianshu.com/p/b58356b465c4)
 
+[实用的文档](https://blog.csdn.net/TurtleOrange/article/details/119147481)
+
+[解决跳帧、断流问题文档](http://events.jianshu.io/p/681239401c7e)
+
 > 一个可以在HTML5视频中播放.flv视频格式的JavaScript库
 
 ### [API](http://bilibili.github.io/flv.js/docs/api.html)
