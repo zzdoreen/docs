@@ -79,6 +79,28 @@ export default ChildPage
     <Button onClick={() => dispatch({ type: 'del' })}>reducer del</Button>
 ```
 
-## [ahooks](https://ahooks.js.org/zh-CN/hooks) `react hooks库`
+### useEffect & useMemo
 
-### useRequest 异步数据管理的hooks
+```javascript
+  const dom = useRef()
+  const state = useReactive({ num: 1, childInfo: 'hello' })
+
+  useEffect(() => {
+    // mounted 的时候执行 模板已经挂在到页面上，dom可以获取到
+    console.log('render effect', dom, state.num)
+    // dom -> { current:HTMLElement }
+  }, [state.num])
+
+  useMemo(() => {
+    // 相当于create 的时候执行 模板没有挂在到页面上，dom获取不到
+    console.log('render memo', dom, state.num)
+    // dom -> { current:undefined }
+  }, [state.num])
+
+```
+
+### useReactive 响应式数据，直接修改属性可以刷新视图
+
+```javascript
+ const state = useReactive(initialState: Record<string,any>) // 参数为一个对象
+```
