@@ -75,3 +75,62 @@
     }
         
 ```
+
+
+```javascript
+try {
+  flvPlayerList[index].on(flvjs.Events.STATISTICS_INFO, (res) => {
+    if (res.decodedFrames === 0) {
+      // TODO 画面卡顿重连
+      stuckCount.value[index] = stuckCount.value[index] ? stuckCount.value[index] + 1 : 1
+      if (stuckCount.value[index] >= 30) {
+        setAllPlayFlag(false)
+        // TODO 是否需要重连
+        setTimeout(() => {
+          stuckCount.value[index] = 0
+          handleVideoStatusChange(index, true)
+          playerList[index].addEventListener('loadedmetadata', () => {
+            setAllPlayFlag(isAllPlayStatus(currentPage, defaultSize))
+            })
+            console.log('---画面卡顿重连')
+            }, 1000);
+          }
+          console.log(`%c STATISTICS_INFO loading  ${index} , count:${stuckCount.value[index]} ${playerList[index]?.paused}`, 'color:red')
+          } else {
+            stuckCount.value[index] = 0
+        }
+      })
+    } catch (err) {
+      console.log('拉流异常捕获', err)
+  }
+
+```
+
+
+```javascript
+  const handleProgress = (index: number) => {
+    // 数据在请求但是画面不动
+    if (playSt.value[index]) {
+      if (currentTimeCount.value[index] && currentTimeCount.value[index].key == playerList[index].currentTime) {
+        currentTimeCount.value[index].count++
+        if (currentTimeCount.value[index].count >= 10) {
+
+          currentTimeCount.value[index] = null
+          handleVideoStatusChange(index, true)
+
+          playerList[index].addEventListener('loadedmetadata', () => {
+            setAllPlayFlag(isAllPlayStatus(currentPage, defaultSize))
+          })
+
+          console.log('%c 画面卡顿重连', 'color:red')
+        }
+      } else {
+        currentTimeCount.value[index] = { key: playerList[index].currentTime ? playerList[index].currentTime : 0 + '', count: 1 }
+      }
+    }
+  }
+```
+
+## 内存泄漏
+
+> `reload()` 可以清除缓存、但是切换标签的时候会清空所有状态，只有在路由跳转的时候用一下
