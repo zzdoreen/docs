@@ -204,132 +204,147 @@
  1. 自身调用; 
  2. 子类可以调用;
 
-## 11.3 类的修饰符 readonly
+## 11.3 类的修饰符 readonly;
 
   1. 顺序  ->  public readonly
   2. 是否可写： readonly 只读， 不可写
   3. 不能修饰成员方法;
 
   参数属性： 简写的写法;
+
+  ```javascript
+
   class Animal1 {
-  constructor(private name: string) { }
-  move(distanceInMeters: number) {
-    console.log(`${this.name} moved ${distanceInMeters}m.`);
+    constructor(private name: string) { }
+    move(distanceInMeters: number) {
+      console.log(`${this.name} moved ${distanceInMeters}m.`)
+    }
   }
-}
-
- let jake = new Animal1('jake');
- console.log(jake);
-
-class Animal2 {
-  private name: string;
-  constructor(name: string) { this.name = name }
-  move(distanceInMeters: number) {
-    console.log(`${this.name} moved ${distanceInMeters}m.`);
+  let jake = new Animal1('jake');
+  console.log(jake);
+  class Animal2 {
+    private name: string;
+    constructor(name: string) { this.name = name }
+    move(distanceInMeters: number) {
+      console.log(`${this.name} moved ${distanceInMeters}m.`);
+    }
   }
-}
+  ```
 
-## 11.4 类的存取器
-
-   getter 取值函数  obj.a
-   setter 存值函数 obj.a = '123'
+## 11.4 类的存取器;
+   + `getter` 取值函数  obj.a
+   + `setter` 存值函数 obj.a = '123'
 
   //同时出现, 就是一个属性;
 
    改变赋值和读取的行为;
 
-## 11.5 类的静态属性&& 抽象类
+## 11.5 类的静态属性 && 抽象类;
 
-抽象类： 能够提供其他类的基类;
-抽象类： 1. 无法创建实例;
-        2. 抽象方法一定要有实现;
++ 抽象类： 能够提供其他类的基类;
++ 抽象类： 
+  1. 无法创建实例;
+  2. 抽象方法一定要有实现;
 
-        abstract class Animal {
-  abstract makeSound(): void;
-  move(): void {
-    console.log('roaming the earch...');
+  ```javascript
+        
+  abstract class Animal {
+    abstract makeSound(): void;
+    move(): void {
+      console.log('roaming the earch...');
+    }
   }
-}
-
-class Snack extends Animal {
-  makeSound() {
-    console.log('zzzzzzz');
+  class Snack extends Animal {
+    makeSound() {
+      console.log('zzzzzzz');
+    }
+    move(): void {
+      console.log('roaming the earch...');
+    }
   }
-  move(): void {
-    console.log('roaming the earch...');
-  }
-}
 
-class Rhino extends Animal {
-  makeSound() {
-    console.log('mmmmmmm');
+  class Rhino extends Animal {
+    makeSound() {
+      console.log('mmmmmmm');
+    }
+    move(): void {
+      console.log('roaming the earch...');
+    }
   }
-  move(): void {
-    console.log('roaming the earch...');
-  }
-}
 
-new Snack();
+  new Snack();
 
-## 11.6 高阶技巧
+  ```
+
+## 11.6 高阶技巧;
 
  1. 定义类的时候 ， 定义了一个类型;
  2. 定义类的时候, 定义了一个构造函数;
-
  3. 接口可以继承类;
 
-## 12.1 接口和 函数类型接口
-
+## 12.1 接口和 函数类型接口;
   函数类型接口：
-  interface SearchFunc {
-  (source: string, subString: string): boolean;
-  }
+  ```javascript
 
-  let mySearch: SearchFunc;
-  mySearch = function (source: string, subString: string): boolean {
-    let result = source.search(subString);
-    return result > -1;
-  }
+    interface SearchFunc {
+      (source: string, subString: string): boolean;
+    }
 
-  type SearchFunc = (source: string, subString: string) => boolean
+    let mySearch: SearchFunc;
+    mySearch = function (source: string, subString: string): boolean {
+      let result = source.search(subString);
+      return result > -1;
+    }
 
-// function mySearch(source: string, subString: string): boolean {
-//   let result = source.search(subString);
-//   return result > -1;
-// }
+    type SearchFunc = (source: string, subString: string) => boolean
 
-## 12.2 接口和 可索引的类型接口
+    // function mySearch(source: string, subString: string): boolean {
+    //   let result = source.search(subString);
+    //   return result > -1;
+    // }
+  ```
+## 12.2 接口和 可索引的类型接口;
 
-  1.共有支持两种索引签名：字符串和数字。
-
+  1. 共有支持两种索引签名：字符串和数字。
+   
+  ```javascript
   interface NumberArray {
     [index: number]: number
   }
+  ```
 
   是因为当使用number来索引时，
   JavaScript会将它转换成string然后再去索引对象;
 
-  2.索引签名 有点像老大的意思;
+  2. 索引签名 有点像老大的意思;
+
+  ```javascript
+
 
   interface NumberDictionary {
     [index: string]: number | string;
     length: number;    // 可以，length是number类型
     name: string       // 错误，`name`的类型与索引类型返回值的类型不匹配
   }
+  ```
 
   3. 索引签名可以设置为只读;
+  ```javascript
+  
   interface ReadonlyStringArray {
       readonly [index: number]: string;
   }
   let myArray: ReadonlyStringArray = ["Alice", "Bob"];
   myArray[2] = "Mallory"; // error!
+  ```
 
-## 12.3 类类型接口;   -- 类实现接口
+  ## 12.3 类类型接口;   -- 类实现接口;
 
    对类的一部分行为的抽象;
 
     类实现所有接口中的属性和方法; && 对比 抽象类： 抽象方法需要实现;
 
+  ```javascript
   
     interface ClockInterface {
         currentTime: Date;
@@ -341,67 +356,70 @@ new Snack();
     }
 
     interface Alarm {
-  alert(): void;
-}
+      alert(): void;
+    }
 
-interface Light {
-  color: string;
-  lightOn(): void;
-  lightOff(): void;
-}
+    interface Light {
+      color: string;
+      lightOn(): void;  
+      lightOff(): void;
+    }
 
-class Door { }
+    class Door { }
 
-class SecurityDoor extends Door implements Alarm {
-  alert() {
-    console.log('hei');
-  }
-}
+    class SecurityDoor extends Door implements Alarm {
+      alert() {
+        console.log('hei');
+      }
+    }
 
-class Car implements Alarm, Light {
-  color = 'red';
-  lightOn() {
+    class Car implements Alarm, Light {
+      color = 'red';
+      lightOn() {
 
-  }
-  lightOff() {
+      }
+      lightOff() {
 
-  }
-  alert() {
-    console.log('hello');
-  }
-}
+      }
+      alert() {
+        console.log('hello');
+      }
+    }
+  ```
 
 ## 12.4 类类型接口 --类静态部分与实例部分的区别
 
-constructor存在于类的静态部分，所以不在检查的范围内
+  ***`constructor`存在于类的静态部分，所以不在检查的范围内***
+     
+  类静态部分与实例部分需要单独做;
 
-     类静态部分与实例部分需要单独做;
+  ```javascript
+    // 实例部分
+    interface ClockInterface {
+      currentTime: Date;
+      getTime(h: number, m: number): any;
+    }
+    // 构造函数 --静态类型部分
+    interface ClockConstructor {
+      new(h: number, m: number): any
+    }
 
-interface ClockInterface {
-  currentTime: Date;
-  getTime(h: number, m: number): any;
-}
+    class Clock implements ClockInterface {
+      currentTime = new Date()
+      constructor(h: number, m: number) { }
+      getTime() {}
+    }
 
-interface ClockConstructor {
-  new(h: number, m: number): any
-}
+    function createClock(C: ClockConstructor, h: number, m: number) :ClockInterface{
+      return new C(h, m);
+    }
 
-class Clock implements ClockInterface {
-  currentTime = new Date()
-  constructor(h: number, m: number) { }
-  getTime() {
+    let clock = createClock(Clock, 12, 12);
+  ```
 
-  }
-}
+ ## 12.5 接口继承接口 | 类实现接口;
 
-function createClock(C: ClockConstructor, h: number, m: number) {
-  return new C(h, m);
-}
-
-let clock = createClock(Clock, 12, 12);
-
-## 12.5 接口继承接口 | 类实现接口
-
+  ```javascript
      interface Shape {
       color: string;
     }
@@ -413,59 +431,63 @@ let clock = createClock(Clock, 12, 12);
     interface Square extends Shape, PenStroke {
       sideLength: number;
     }   
+  ```
+ ## 12.6 混合类型;
 
-## 12.6 混合类型
+  函数类型的`interface`, 添加属性的方式来实现 对象的`interface`;
+    
+  ```javascript
+  // 函数类型 + 对象的类型
+    interface Counter {
+      (start: number): string;
+      interval: number;
+      reset(): void;
+    }
 
-    函数类型的interface, 添加属性的方式来实现 对象的interface;
-<!-- 函数类型 + 对象的类型; -->
-  interface Counter {
-    (start: number): string;
-    interval: number;
-    reset(): void;
+    function getCounter(): Counter {
+      // 断言 => (<any>result).id => (result as any).id 
+      // 初始化值的时候使用
+
+      let counter = <Counter>function(start: number) { };
+      counter.interval = 123;
+      counter.reset = function () { };
+      return counter;
+    }
+
+    let c = getCounter();
+    c(10);
+    c.reset();
+    c.interval = 5.0;
+
+  ```
+
+## 12.7 混合类型的应用：
+
+```javascript
+  interface ClockInterface {
+    currentTime: Date;
+    getTime(h: number, m: number): any;
   }
 
-  function getCounter(): Counter {
-    let counter = <Counter>function (start: number) { };
-    counter.interval = 123;
-    counter.reset = function () { };
-    return counter;
+  interface ClockConstructor {
+    new(h: number, m: number): any;
+    getTime1(): void;
+  }
+  class Clock implements ClockInterface {
+    currentTime = new Date()
+    constructor(h: number, m: number) { }
+    getTime() {}
+
+    static getTime1() {}
   }
 
-  let c = getCounter();
-  c(10);
-  c.reset();
-  c.interval = 5.0;
-
-## 12.7 混合类型的应用
-
-interface ClockInterface {
-  currentTime: Date;
-  getTime(h: number, m: number): any;
-}
-
-interface ClockConstructor {
-  new(h: number, m: number): any;
-  getTime1(): void;
-}
-class Clock implements ClockInterface {
-  currentTime = new Date()
-  constructor(h: number, m: number) { }
-  getTime() {
-
+  function createClock(C: ClockConstructor, h: number, m: number) {
+    return new C(h, m);
   }
 
-  static getTime1() {
-
-  }
-}
-
-function createClock(C: ClockConstructor, h: number, m: number) {
-  return new C(h, m);
-}
-
-let clock = createClock(Clock, 12, 12);
-
-## 12.8 接口继承类
+  let clock = createClock(Clock, 12, 12);
+```
+## 12.8 接口继承类：
 
   1. 类可以实现接口;
   2. 接口可以继承接口;
@@ -473,166 +495,168 @@ let clock = createClock(Clock, 12, 12);
 
 ## 13.1 泛型
 
-T 泛型变量 | 类型变量;
-function identity1<T>(arg: T): T {
-  return arg;
-}
+ ***`T` 泛型变量 | 类型变量 ***
 
-identity1('123')
-identity1<number>(123)
-
- interface MyArray<T> {
- }
-
-let a: number[] = [12, 3, 4];
- let b: Array<number> = [1, 2, 3, 4]
-
-## 13.2 泛型类型
-
- function identity<U>(arg: U): U {
-  return arg;
-}
-
-interface IdentityInterface<T> {
-  (arg: T): T
-}
-interface IdentityInterface {
-  <T>(arg: T): T
-}
-
- 1.函数泛型的注解方式；
-
-let a: <T>(arg: T) => T = identity;
-
- 2.对象字面量的方式来定义泛型类型;
-
- let a: { <T>(arg: T): T } = identity;
-
- 3.泛型接口的定义方式：
- let a: IdentityInterface = identity;
-
-## 13.3 泛型类 泛型约束
-
-class MinClass<T>{
-  public list: T[] = [];
-  add(num: T) {
-    this.list.push(num);
+ ```javascript
+  function identity1<T>(arg: T): T {
+    return arg;
   }
 
-  min(): T {
-    let minNum = this.list[0];
-    for (var i = 0; i < this.list.length; i++) {
-      if (minNum > this.list[i]) {
-        minNum = this.list[i];
-      }
-    }
-    return minNum;
-  }
-}
+  identity1('123')
+  identity1<number>(123)
 
-泛型约束：
-   extends 接口的方式(不一定是接口);
-
-interface LenthWise1 {
-  length: number;
-}
-type LenthWise = string | LenthWise1
-function loggingIdentity<T extends LenthWise>(arg: T): T {
-  console.log(arg.length);  // Error: T doesn't have .length
-  return arg;
-}
-
-## 13.4 多重泛型约束;   ||  &&   |  &
-
-interface Sentence {
-  content: string;
-  title: string;
-}
-
-interface Music {
-  url: string;
-}
-
-class Test<T extends Sentence & Music>{
-  props: T
-  constructor(public arg: T) {
-    this.props = arg
+  interface MyArray<T> {
+    [n: number]: T;
   }
 
-  info() {
-    return {
-      url: this.props.url,
-      content: this.props.content,
-      title: this.props.title
-    }
-  }
-}
-
-## 13.5  在泛型里使用类类型, 约束或是更好的推论
-
-function create<T>(c: { new(): T; }): T {
-  return new c();
-}
-
-class BeeKeeper {
-  hasMask: boolean;
-}
-
-class ZooKeeper {
-  nametag: string;
-}
-
-class Animal {
-  numLegs: number;
-}
-
-class Bee extends Animal {
-  keeper: BeeKeeper;
-}
-
-class Lion extends Animal {
-  keeper: ZooKeeper;
-}
-
-function createInstance<A extends Animal>(c: new () => A): A {
-  return new c();
-}
-
-createInstance(Lion).keeper.nametag;  // typechecks!
-createInstance(Bee).keeper.hasMask;
-
-## 14  元组
-
-   1. 确定成员 类型， 长度;
-
-   2. push 越界的时 , 类型为联合类型;
-
-   3. 可选的元素类型：
-   let list: [number, string, boolean?];
-
-   4. rest 拓展运算符;
-
-   ```
-   declare function test(...args: [number, string, boolean]): void;
-declare function test(arg1: number, arg2: string, arg3: boolean): void;
-
- let list1: [number, ...string[]] = [1, '2', '3', '4'];
-let list2: [string, ...number[]] = ['1', 2, 3, 4, 5, 6, 7];
+  let a: number[] = [12, 3, 4];
+  let b: Array<number> = [1, 2, 3, 4]
 ```
 
-## 15  声明文件
+ ## 13.2 泛型类型
 
-   在引入第三方的类型声明用的;
+ ```javascript
+  function identity<U>(arg: U): U {
+    return arg;
+  }
 
-   @types/***
+  interface IdentityInterface<T> {
+    (arg: T): T
+  }
+  interface IdentityInterface {
+    <T>(arg: T): T
+  }
+  ```
 
-   **.d.ts
+ 1. 函数泛型的注解方式；
+   
+  ```javascript
+    let a: <T>(arg: T) => T = identity;
 
-   declare var
-   declare const
-   declare function
-   declare let
-   declare enum
+  ```
+ 2. 对象字面量的方式来定义泛型类型;
+ ```javascript
+ let a: { <T>(arg: T): T } = identity;
+ 
+  ```
+ 3. 泛型接口的定义方式：
+   
+ ```javascript
+ let a: IdentityInterface = identity;
 
-   interface
-   type
+ ```
+
+  ## 13.3 泛型类 泛型约束;
+   ```javascript
+  class MinClass<T>{
+    public list: T[] = [];
+    add(num: T) {
+      this.list.push(num);
+    }
+
+    min(): T {
+      let minNum = this.list[0];
+      for (var i = 0; i < this.list.length; i++) {
+        if (minNum > this.list[i]) {
+          minNum = this.list[i];
+        }
+      }
+      return minNum;
+    }
+  }
+  ```
+  + 泛型约束： 
+   `extends` 接口的方式(不一定是接口);
+
+  ```javascript
+  interface LenthWise1 {
+    length: number;
+  }
+  type LenthWise = string | LenthWise1
+  function loggingIdentity<T extends LenthWise>(arg: T): T {
+    console.log(arg.length);  // Error: T doesn't have .length
+    return arg;
+  }
+  ```
+
+  ## 13.4 多重泛型约束;   ||  &&   |  &
+  ```javascript
+  interface Sentence {
+    content: string;
+    title: string;
+  }
+
+  interface Music {
+    url: string;
+  }
+
+  class Test<T extends Sentence & Music>{
+    props: T
+    constructor(public arg: T) {
+      this.props = arg
+    }
+
+    info() {
+      return {
+        url: this.props.url,
+        content: this.props.content,
+        title: this.props.title
+      }
+    }
+  }
+  ```
+
+## 13.5  在泛型里使用类类型, 约束或是更好的推论;
+
+```javascript
+  function create<T>(c: { new(): T; }): T {
+    return new c();
+  }
+
+  class BeeKeeper {
+    hasMask: boolean;
+  }
+
+  class ZooKeeper {
+    nametag: string;
+  }
+
+  class Animal {
+    numLegs: number;
+  }
+
+  class Bee extends Animal {
+    keeper: BeeKeeper;
+  }
+
+  class Lion extends Animal {
+    keeper: ZooKeeper;
+  }
+
+  function createInstance<A extends Animal>(c: new () => A): A {
+    return new c();
+  }
+
+  createInstance(Lion).keeper.nametag;  // typechecks!
+  createInstance(Bee).keeper.hasMask; 
+```
+## 14  元组;
+   1. 确定成员 `类型`、`长度`;
+
+   2. `push` 越界的时 , 类型为联合类型;
+
+   3. 可选的元素类型：
+   
+   ```javascript
+   let list: [number, string, boolean?];
+   ```
+
+   4. `rest` 拓展运算符;
+   
+   ```javascript
+    declare function test(...args: [number, string, boolean]): void;
+    declare function test(arg1: number, arg2: string, arg3: boolean): void;
+
+    let list1: [number, ...string[]] = [1, '2', '3', '4'];
+    let list2: [string, ...number[]] = ['1', 2, 3, 4, 5, 6, 7];
+  ``` 
