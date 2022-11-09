@@ -1,10 +1,8 @@
-
-[![ts](https://i.postimg.cc/hGVCR67f/20221103090141.png)](https://postimg.cc/Lq6kzyDp)
-
 ## 1.1 简介
 
   + ts 是由微软开发的开源的编程语言
-  +  typescript 是javascript 的超集
+  
+  +  `typescript`是`javascript`的超集
 
   + ts 是开发大型应用的基石
 
@@ -16,17 +14,17 @@
 
 ## 3.1 数据类型
   
-  原始数据类型： boolean string number null undefined symbol
-  引用数据类型： object
+  + 原始数据类型： `boolean` `string` `number` `null` `undefined` `symbol`
+  + 引用数据类型： `object`
 
-  基础类型：boolean string number null undefined symbol
-    any  never void
+  + 基础类型：`boolean` `string` `number` `null` `undefined` `symbol`
+    `any`  `never` `void`
 
-    any 没办法有代码提示;
-    any 在代码测试的时候用;
+    - `any` 没办法有代码提示;
+    - `any` 在代码测试的时候用;
 
-   对象 interface
-   数组 number[]  string[] boolean[]  泛型的写法： Array<number>
+   + 对象 `interface`
+   + 数组 `number[]`  `string[]` `boolean[]`  泛型的写法：` Array<number>`
 
    函数的注解：
 
@@ -37,24 +35,24 @@
    ```
 
    新的语法特性：
-     `as` 断言
+     值 `as` 类型 ；或者 <类型 >值  // 断言
      `class` (OOP 面向对象的三大特性) ： 封装 , 继承, 多态;
 
 ## 4.1 原始数据的注解
 
-  布尔值的注解：
+  + 布尔值的注解：
 
   ```typescript
     let isDone: boolean = false;
   ```
 
-  数字的注解：
+  + 数字的注解：
 
   ```typescript
   let decLiteral: number = 6;
   ```
 
-  字符串的注解:
+  + 字符串的注解:
 
   ```typescript
   let name: string = "bob";
@@ -85,6 +83,10 @@
   注意：
   1. 联合类型的共有属性是不会报错;
   2. 在赋值的时候确认类型;
+   
+   ```typescript
+   let a: string | number;
+   ```
 
 ## 8.1 接口 interface
 
@@ -192,17 +194,17 @@
 
 
 ## 11.2 类的修饰符
- + `public` 公共的成员属性：
- 1. 自身调用;
- 2. 子类可以调用;
- 3. 实例调用;
+ + `public` 公共的成员属性 (默认)：
+   1. 自身调用;
+   2. 子类可以调用;
+   3. 实例调用;
 
  + `private` 私有属性：
- 1. 自身调用;
+   1. 自身调用;
 
  + `protected` 受保护的成员属性： 
- 1. 自身调用; 
- 2. 子类可以调用;
+   1. 自身调用; 
+   2. 子类可以调用;
 
 ## 11.3 类的修饰符 readonly;
 
