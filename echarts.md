@@ -50,6 +50,8 @@
 
 ## [grid 坐标系网格](https://echarts.apache.org/zh/option.html#grid)
 
+> 文字过长 通过left/bottom的距离设置  eg：`16 + fontSize * maxYLabelLength * 1.2,`
+
 ```javascript
 {
    grid:{
@@ -93,3 +95,25 @@
 ## [xAxis x轴](https://echarts.apache.org/zh/option.html#xAxis)
 
 + 和y轴类似
+
+## [dataZoom 区域缩放](https://echarts.apache.org/zh/option.html#dataZoom)
+
+```javascript
+
+ dataZoom: [
+        {
+          type: 'inside', // 内置
+          yAxisIndex: 0,
+          startValue: data.length,
+          endValue: data.length - 12,
+          filterMode: 'filter', // 主轴 'filter'，辅轴 'empty'
+          zoomOnMouseWheel: false,
+          moveOnMouseWheel: true,
+          moveOnMouseMove: false
+        },
+        {
+         type: 'slider', // 滚动条
+         ...
+        }
+      ],
+```
