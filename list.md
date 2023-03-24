@@ -36,10 +36,6 @@ let json = { name, age, say(){ console.log('') } }
 
 ```
 
-## react
-
-![](https://i.postimg.cc/3r0gYsv4/20221010095328.jpg)
-
 ## ProTable
 
 ### beforeSearchSubmit 搜索前参数的修改
