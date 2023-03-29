@@ -12,13 +12,14 @@
 
 ## 2.1 ts 是静态类型 , js 是动态类型
 
+> 动态类型`运行时`，解析器基于变量的类型决定变量的类型 （可以不需要提前声明变量类型）
+
 ## 3.1 数据类型
   
   + 原始数据类型： `boolean` `string` `number` `null` `undefined` `symbol`
   + 引用数据类型： `object`
 
-  + 基础类型：`boolean` `string` `number` `null` `undefined` `symbol`
-    `any`  `never` `void`
+  + 基础类型：`boolean` `string` `number` `null` `undefined` `symbol` `any` `never` `void`
 
     - `any` 没办法有代码提示;
     - `any` 在代码测试的时候用;
