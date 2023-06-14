@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://api.map.baidu.com/getscript?v=3.0&ak=2Cj12hK8X1jz5STDaOUrGShTmyaw5aUB"></script>
+    <style>
+        #container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid saddlebrown;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="setMapTypeChange(BMAP_NORMAL_MAP)">普通街道视图</button>
+    <button onclick="setMapTypeChange(BMAP_HYBRID_MAP)">卫星和路网的混合视图</button>
+    <button onclick="setMapTypeChange(BMAP_SATELLITE_MAP)">卫星视图</button>
+    <br>
+    <br>
+    <input type="text" placeholder="输入地址" id="location"> <button onclick="locationOrPointAnalyse(true)">提交</button>
+    <input type="text" placeholder="输入经纬度 x,x" id="lglat"> <button onclick="locationOrPointAnalyse(false)">提交</button>
+    <div id="container"></div>
+
+    <script>
+        const locationDom = document.getElementById('location')
+        const lglatDom = document.getElementById('lglat')
+        let marker, label;
+        // 地图初始化 
+        const map = new BMap.Map('container')
+        // var point = new BMap.Point(116.418261, 39.921984);
+        // map.centerAndZoom(point, 15);
+        map.enableScrollWheelZoom();
+
+        // 行政边界
+        (function getBoundary() {
+            const bdary = new BMap.Boundary()
+            bdary.get('湖南凤凰', (rs) => {
+                const count = rs.boundaries.length
+                if (count === 0) return
+                let pointArr = []
+                let polygonArr = []
+                for (let i = 0; i < count; i++) {
+                    // 建立多边形覆盖物
+                    const ply = new BMap.Polygon(rs.boundaries[i], // 返回的不是BMap.Point[] 也能画, 返回的是 105.11,31.5;106.5,23.5... 字符串
+                        {
+                            strokeWeight: 2,
+                            strokeStyle: 'dashed',
+                            strokeColor: "#ff0000",
+                            strokeOpacity: 0.6,
+                            fillColor: 'transparent'
+                        });
+                    polygonArr = polygonArr.concat(ply)
+                    pointArr = pointArr.concat(ply.getPath()); // 获取BMap.Point[]
+                }
+                polygonArr.map(o => map.addOverlay(o)) // 添加覆盖物
+                map.setViewport(pointArr);    // 调整视野
+            })
+        })()
+
+        // 改变地图类型
+        const setMapTypeChange = (type) => map.setMapType(type)
+
+        // 地址解析 / 逆地址解析
+        function locationOrPointAnalyse(isLocation) {
+            const geo = new BMap.Geocoder()
+            const res = isLocation ? locationDom.value : lglatDom.value
+
+            if (map) [marker, label].map(o => map.removeOverlay(o))
+
+            if (isLocation) {
+                lglatDom.value = '';
+                // 地址转经纬度
+                geo.getPoint(res, (point) => {
+                    if (point) {
+                        map.centerAndZoom(point, 16)
+                        marker = new BMap.Marker(point)
+                        map.addOverlay(marker)
+                        console.log(point, point.lng + ',' + point.lng)
+                    } else console.log('地址没有解析到结果')
+                })
+            }
+            else {
+                locationDom.value = ''
+                const [lng, lat] = res.split(',')
+                const point = new BMap.Point(lng, lat)
+                marker = new BMap.Marker(point)
+                map.centerAndZoom(point, 16)
+                map.addOverlay(marker)
+                // 经纬度转地址
+                geo.getLocation(point, (res) => {
+                    const { address, addressComponents: { city, district, province, street, streetNumber, town } } = res
+                    const str = address + '; city: ' + city + '/ district: ' + district + '/ province: ' + province + '/ street: ' + street + '/ streetNumber: ' + streetNumber + '/ town: ' + town
+                    label = new BMap.Label(str, { position: point })
+                    map.addOverlay(label)
+                    console.log(res)
+                })
+            }
+        }
+
+    </script>
+</body>
+</html>
