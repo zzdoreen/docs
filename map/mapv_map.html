@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mapvgl</title>
+    <script src="//mapv.baidu.com/build/mapv.min.js"></script>
+    <script src="//unpkg.com/mapvgl@1.0.0-beta.168/dist/mapvgl.min.js"></script>
+    <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=2Cj12hK8X1jz5STDaOUrGShTmyaw5aUB"></script>
+    <style>
+        #container {
+            width: 100%;
+            height: 500px;
+            border: 1px solid saddlebrown;
+        }
+    </style>
+</head>
+
+<body>
+    <button onclick="showLineTripLayer()">展示/隐藏 轨迹线图层</button>
+    <div id="container"></div>
+
+    <script>
+        const mapData = {
+            lineTripLayer: null
+        }
+        // 地图实例
+        const map = new BMapGL.Map('container')
+        var point = new BMapGL.Point(106.512432, 29.544045);
+        map.centerAndZoom(point, 13);
+        map.enableScrollWheelZoom()
+        map.setTilt(50);
+
+        // 创建MapVGL图层管理器
+        const view = new mapvgl.View({ map})
+
+        // 轨迹线图层
+        function showLineTripLayer() {
+            if (mapData.lineTripLayer) {
+                view.removeLayer(mapData.lineTripLayer)
+                mapData.lineTripLayer = null
+            } else {
+                view.startAnimation()
+                fetch('./car.csv').then((rs) => rs.text()).then((csvstr) => {
+                    var dataSet = mapv.csv.getDataSet(csvstr);
+                    var data = dataSet.get();
+
+                    mapData.lineTripLayer = new mapvgl.LineTripLayer({
+                        trailLength: 121,
+                        color: 'rgb(0, 255, 255)',
+                        data
+                    });
+                    view.addLayer(mapData.lineTripLayer);
+
+                    // data返回的格式 
+                    // data: [{
+                    //     geometry: {
+                    //         type: 'LineString',
+                    //         coordinates: [
+                    //             [116.394191, 39.91334],
+                    //             [116.417259, 39.913672]
+                    //         ]
+                    //     }
+                    // }]
+                });
+            }
+        }
+
+    </script>
+</body>
+
+</html>

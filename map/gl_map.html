@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=2Cj12hK8X1jz5STDaOUrGShTmyaw5aUB"></script>
+    <title>gl</title>
+    <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=2Cj12hK8X1jz5STDaOUrGShTmyaw5aUB"></script>
     <style>
         #container {
             width: 100%;
@@ -16,15 +16,28 @@
 </head>
 
 <body>
-    <button onclick="setMapTypeChange(BMAP_NORMAL_MAP)">普通街道视图</button>
-    <button onclick="setMapTypeChange(BMAP_EARTH_MAP)">地球卫星视图</button>
+    <button onclick="map.setMapType(BMAP_NORMAL_MAP)">普通街道视图</button>
+    <button onclick="map.setMapType(BMAP_EARTH_MAP)">地球卫星视图</button>
+    <button onclick="showOrHideArea('inside')">展示部分区域</button>
+    <button onclick="showOrHideArea('outside')">隐藏部分区域</button>
+    <button onclick="map.setViewport(mapData.pointArr)">返回</button>
+    <button onclick="showDistrictLayer()">简易行政图层</button>
     <div id="container"></div>
 
     <script>
-        const map = new BMapGL.Map('container');
+        const map = new BMapGL.Map('container', {
+            backgroundColor: [77, 167, 167, 50] // [ 红 , 黄 , 蓝 , 透明度? ]
+        });
+        const mapData = {
+            pointArr: [],
+            polygonArr: [],
+            prismArr: [],
+            maskArr: [],
+            district: null
+        }
 
         var point = new BMapGL.Point(116.418261, 39.921984);
-        map.centerAndZoom(point, 15);
+        map.centerAndZoom(point, 18);
         map.enableScrollWheelZoom()
         map.setTilt(50);  // 设置倾斜角度
 
@@ -34,9 +47,7 @@
             bdary.get('湖南凤凰', (rs) => {
                 const count = rs.boundaries.length
                 if (count === 0) return
-                let pointArr = []
-                let polygonArr = []
-                let prismArr = []
+
                 for (let i = 0; i < count; i++) {
                     // GL版本必须传Point数组
                     const arr = rs.boundaries[i].split(';').map(p => {
@@ -44,7 +55,7 @@
                         const point = new BMapGL.Point(lng, lat)
                         return point
                     });
-                    pointArr = pointArr.concat(arr)
+                    mapData.pointArr = mapData.pointArr.concat(arr)
 
                     // 建立棱柱 卫星图中没有效果
                     const prism = new BMapGL.Prism(arr, 5000, // 必须返回BMapGL.Point[]
@@ -66,16 +77,47 @@
                             fillColor: 'pink'
                         });
 
-                    polygonArr = polygonArr.concat(ply)
-                    prismArr = prismArr.concat(prism)
+                    mapData.polygonArr = mapData.polygonArr.concat(ply)
+                    mapData.prismArr = mapData.prismArr.concat(prism)
                 }
-                [...polygonArr, ...prismArr].map(o => map.addOverlay(o)) // 添加覆盖物
-                map.setViewport(pointArr);    // 调整视野
+                [...mapData.polygonArr, ...mapData.prismArr].map(o => map.addOverlay(o)) // 添加覆盖物
+                map.setViewport(mapData.pointArr);    // 调整视野
             })
         })()
 
-        // 改变地图类型
-        const setMapTypeChange = (type) => map.setMapType(type)
+        // 区域掩膜 (对于卫星地图无效)
+        function showOrHideArea(type) {
+            if (Array.isArray(mapData.maskArr)) {
+                mapData.maskArr = new BMapGL.MapMask(mapData.pointArr, {
+                    isBuildingMask: true,
+                    isPoiMask: true,
+                    isMapMask: true,
+                    showRegion: type,   // 'inside' | 'outside',
+                    topFillColor: '#5679ea',
+                    topFillOpacity: 0.5,
+                    sideFillColor: '#5679ea',
+                    sideFillOpacity: 0.9
+                })
+                map.addOverlay(mapData.maskArr)
+            } else { map.removeOverlay(mapData.maskArr); mapData.maskArr = [] }
+        }
+
+        // 简易行政图层
+        function showDistrictLayer() {
+            map.removeDistrictLayer(mapData.district)
+            mapData.district = new BMapGL.DistrictLayer({
+                name: '(湘西土家族苗族自治州)',
+                kind: 2, // 0-省级行政区 1-市级 2-区/县级
+                fillColor: '#618bf8',
+                fillOpacity: 1,
+                strokeColor: '#daeafa',
+                viewport: true
+            })
+
+            map.addDistrictLayer(mapData.district)
+            mapData.district.addEventListener('mouseover', (e) => e.currentTarget.setFillColor('#9169db'))
+            mapData.district.addEventListener('mouseout', (e) => e.currentTarget.setFillColor(e.currentTarget.style.fillColor))
+        }
 
     </script>
 </body>
