@@ -42,7 +42,7 @@
                 mapData.lineTripLayer = null
             } else {
                 view.startAnimation()
-                fetch('./car.csv').then((rs) => rs.text()).then((csvstr) => {
+                fetch('./static/car.csv').then((rs) => rs.text()).then((csvstr) => {
                     var dataSet = mapv.csv.getDataSet(csvstr);
                     var data = dataSet.get();
 

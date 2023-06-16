@@ -7,6 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>js</title>
     <script src="https://api.map.baidu.com/getscript?v=3.0&ak=2Cj12hK8X1jz5STDaOUrGShTmyaw5aUB"></script>
+    <script type="text/javascript"
+        src="//api.map.baidu.com/library/TextIconOverlay/1.2/src/TextIconOverlay_min.js"></script>
+    <script type="text/javascript"
+        src="//api.map.baidu.com/library/MarkerClusterer/1.2/src/MarkerClusterer_min.js"></script>
     <style>
         #container {
             width: 100%;
@@ -22,6 +26,8 @@
     <button onclick="setMapTypeChange(BMAP_SATELLITE_MAP)">卫星视图</button>
     <br>
     <br>
+    <button onclick="getPointCollection()">海量点</button>
+    <button onclick="getMarkerClusterer()">点聚合</button>
     <input type="text" placeholder="输入地址" id="location"> <button onclick="locationOrPointAnalyse(true)">提交</button>
     <input type="text" placeholder="输入经纬度 x,x" id="lglat"> <button onclick="locationOrPointAnalyse(false)">提交</button>
     <div id="container"></div>
@@ -29,7 +35,7 @@
     <script>
         const locationDom = document.getElementById('location')
         const lglatDom = document.getElementById('lglat')
-        let marker, label;
+        let marker, label, pointCollection, markers;
         // 地图初始化 
         const map = new BMap.Map('container')
         // var point = new BMap.Point(116.418261, 39.921984);
@@ -80,6 +86,7 @@
                         map.centerAndZoom(point, 16)
                         marker = new BMap.Marker(point)
                         map.addOverlay(marker)
+                        marker.setAnimation(BMAP_ANIMATION_BOUNCE) // 只有在地图添加完点之后才能生效
                         console.log(point, point.lng + ',' + point.lng)
                     } else console.log('地址没有解析到结果')
                 })
@@ -91,6 +98,7 @@
                 marker = new BMap.Marker(point)
                 map.centerAndZoom(point, 16)
                 map.addOverlay(marker)
+                marker.setAnimation(BMAP_ANIMATION_DROP)
                 // 经纬度转地址
                 geo.getLocation(point, (res) => {
                     const { address, addressComponents: { city, district, province, street, streetNumber, town } } = res
@@ -102,6 +110,60 @@
             }
         }
 
+        // 加载海量点
+        function getPointCollection() {
+            if (pointCollection) {
+                pointCollection.clear()
+                // map.removeOverlay(pointCollection)
+                pointCollection = null
+            } else {
+                fetch('./static/points-sample-data.json').then(res => res.json()).then(points => {
+                    const pointArr = points.data.map(o => new BMap.Point(o[0], o[1]))
+                    markers = pointArr.map(o => new BMap.Marker(o))
+                    const option = { size: BMAP_POINT_SIZE_SMALL, shape: BMAP_POINT_SHAPE_STAR, color: 'yellow' }
+                    pointCollection = new BMap.PointCollection(pointArr, option)
+                    map.addOverlay(pointCollection)
+                })
+            }
+        }
+
+        // 点聚合
+        function getMarkerClusterer() {
+            if (markers) {
+                var markerClusterer = new BMapLib.MarkerClusterer(map, {
+                    markers,
+                    gridSize: 30,
+                    // 大于10的使用数组的第一个样式
+                    // 大于10小于20的使用数组的第儿个样式
+                    // 大于20的使用数组的第三个样式 .... 
+                    styles: [
+                        {
+                            url: 'http://api.map.baidu.com/library/MarkerClusterer/1.2/examples/images/heart30.png', // required
+                            size: new BMap.Size(30, 26), // required
+                            opt_anchor: [16, 0],
+                            textColor: '#fff',
+                            opt_textSize: 10
+                        },
+                        {
+                            url: 'http://api.map.baidu.com/library/MarkerClusterer/1.2/examples/images/heart40.png',
+                            size: new BMap.Size(40, 35),
+                            opt_anchor: [40, 35],
+                            textColor: '#ff0000',
+                            opt_textSize: 12
+                        },
+                        {
+                            url: 'http://api.map.baidu.com/library/MarkerClusterer/1.2/examples/images/heart50.png',
+                            size: new BMap.Size(50, 44),
+                            opt_anchor: [32, 0],
+                            textColor: 'white',
+                            opt_textSize: 14
+                        }
+                    ]
+                });
+            }
+        }
+
     </script>
 </body>
+
 </html>

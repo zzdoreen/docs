@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gl</title>
     <script src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=2Cj12hK8X1jz5STDaOUrGShTmyaw5aUB"></script>
+    <script src="./static/style.js"></script>
     <style>
         #container {
             width: 100%;
@@ -22,11 +23,18 @@
     <button onclick="showOrHideArea('outside')">隐藏部分区域</button>
     <button onclick="map.setViewport(mapData.pointArr)">返回</button>
     <button onclick="showDistrictLayer()">简易行政图层</button>
+    <br>
+    <button onclick="map.setMapStyleV2({styleJson:snowStyle})">snowStyle</button>
+    <button onclick="map.setMapStyleV2({styleJson:darkStyle})">darkStyle</button>
+    <button onclick="map.setMapStyleV2({styleJson:purpleStyle})">purpleStyle</button>
+    <button onclick="map.setMapStyleV2({styleJson:whiteStyle})">whiteStyle</button>
+    <button onclick="map.setMapStyleV2({})">none</button>
     <div id="container"></div>
 
     <script>
         const map = new BMapGL.Map('container', {
-            backgroundColor: [77, 167, 167, 50] // [ 红 , 黄 , 蓝 , 透明度? ]
+            backgroundColor: [77, 167, 167, 50], // [ 红 , 黄 , 蓝 , 透明度? ]
+            // style: { styleJson: whiteStyle }
         });
         const mapData = {
             pointArr: [],
