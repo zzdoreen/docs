@@ -41,8 +41,8 @@
         let marker, label, pointCollection, polygonArr = [], markers, markerClusterer, selectFlag;
         // 地图初始化 
         const map = new BMap.Map('container')
-        var point = new BMap.Point(116.418261, 39.921984);
-        map.centerAndZoom(point, 15);
+        // var point = new BMap.Point(116.418261, 39.921984);
+        // map.centerAndZoom(point, 15);
         map.enableScrollWheelZoom();
 
         // 行政边界
@@ -67,6 +67,7 @@
                 }
                 polygonArr.map(o => map.addOverlay(o)) // 添加覆盖物
                 map.setViewport(pointArr);    // 调整视野
+                setMapTypeChange(BMAP_HYBRID_MAP)
             })
         })()
 
