@@ -9,6 +9,7 @@
 ```javascript
 {
    tooltip:{
+    confine: true | false, // 是否将tooltip框限制在图表区域内 !!!!
     show: true | false,
     trigger: 'item' | 'axis' | 'none',  // 触发类型
     formatter: '' | ({marker,name,percent,})=>'',  // 浮层自定义内容 marker图标 percent占比 name名称
