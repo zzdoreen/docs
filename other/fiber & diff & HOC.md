@@ -30,7 +30,9 @@ reconciler diff vdom进行对比更新 （vdom->dom 是同步的过程
 1. 同步不可中断 -> 异步可中断
 2. scheduler 中存在任务优先级
 
-fiber -> window.requestIdleCallback()  解决该方法兼容性问题
+fiber -> [window.requestIdleCallback()](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/requestIdleCallback)  解决该方法兼容性问题
+
+> `window.requestIdleCallback(callack,option)` 方法插入一个函数，这个函数将在浏览器空闲时期被调用。这使开发者能够在主事件循环上执行后台和低优先级工作，而不会影响延迟关键事件，如动画和输入响应。函数一般会按先进先调用的顺序执行，然而，如果回调函数指定了执行超时时间timeout，则有可能为了在超时前执行函数而打乱执行顺序。
 
 ### 解决的问题
 

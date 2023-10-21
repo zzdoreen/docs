@@ -1,3 +1,4 @@
+已更新
 ## [flv.js](http://bilibili.github.io/flv.js)
 
 [中文文档](https://www.jianshu.com/p/b58356b465c4)
