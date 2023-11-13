@@ -37,5 +37,28 @@ const isChrome = ua.indexOf('Chrome')
 
 + `history`: 调用浏览器前进、后退功能等
 
-# react render
-# flex
+# let const var 作用域
+
+> 在全局作用域中， `let` 和 `const` 声明的全局变量，存储在了一个块级作用域 `script` 中。 `var` 声明的变量， `function` 声明的函数直接挂载到了`全局对象 (global) 的属性上`
+
+```js
+let b = 'let b'
+var a = 'var a'
+const c = 'const c'
+var funA = function () {
+    console.log('hello')
+}
+let funB = function () {
+    console.log('world')
+}
+function fun(){
+    console.log('-')
+}
+//          var a, undefined, undefined, -, hello, Error ... not a function
+console.log(this.a, this.b, this.c, this.fun(), this.funA(), this.funB())
+
+// 正常输出，先执行函数 再输出变量
+console.log(a, b, c, fun(), funA(), funB())
+
+```
+![](https://i.postimg.cc/Njz2qqbh/1699858887446.png)

@@ -1,4 +1,19 @@
-# flex计算
+# flex
+
+## flex-basis 和 width
++ `flex-basis` 主轴上的宽度
+> `flex-direction` 如果是 **row** ，则是 **横向尺寸** ，为 **column** ,则相当于 **纵向尺寸**
+
++ `width` 元素宽度
+
+不设置width时，可以使用flex-basis；
+不设置flex-basis时，可以使用width。
+同时设置width和flex-basis时，~~如果flex-basis大于自身内容宽度，那么不管width是否设置~~，flex-basis优先级高。
+
+## flex-grow
+> （父容器宽度 - 各个子项flex-basis(width)总和）/ 各子项flex-grow总和 * flex-grow + flex-basis(width)
+
+## flex计算
 
 + flex-grow
 + flex-shrink
