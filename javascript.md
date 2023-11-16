@@ -62,3 +62,96 @@ console.log(a, b, c, fun(), funA(), funB())
 
 ```
 ![](https://i.postimg.cc/Njz2qqbh/1699858887446.png)
+
+# 数据类型判断
+
+> 基础数据类型：string、number、boolean、null、undefined、symbol
+  引用数据类型：object (function、object、array)
+
++ `原始数据类型`在内存中是`栈`存储，`引用类型`是`堆`存储
++ 栈（stack）为自动分配的内存空间，它由系统自动释放
++ 堆（heap）则是动态分配的内存，大小不定也不会自动释放
++ 在内存中存储方式的不同导致了原始数据类型不可变
++ 原始数据类型和引用数据类型做赋值操作一个是`传值`一个是`传址`
+
+## typeof
+
+> 用于判断基础数据类型
+
++ 对于`基础类型`，除 `null` 以外，均可以正确返回
++ 对于`引用类型`，除 `function` 以外，均返回 `object` 
+
+```js
+typeof '' // string
+typeof 1 // number
+typeof Symbol() // symbol
+typeof true // boolean
+typeof undefined // undefined
+
+typeof null // object ×
+
+typeof [] // object
+typeof {} // object
+typeof new Function() // function
+```
+
+## instanceof
+
+> 用于判断引用数据类型 （判断两个对象是否属于实例关系，`不能判断一个对象实例具体属于哪种类型`
+xx.__proto__ => XX.prototype // 最终都指向 null 
+
+eg: `[].__proto__ -> Array.prototype -> Object.prototype -> null`
+
+```js
+[] instanceof Array // true
+[] instanceof Object // true
+
+{} instanceof Object // true
+new Date() instanceof Date // true
+new Function() instanceof Function // true
+new Function() instanceof Object // true
+
+1 instanceof Number // false
+new Number(1) instanceof Number // true
+1 == new Number(1)
+```
+
+## constructor
+
+> 用于判断引用数据类型，原型对象内包含一个 `constructor` 构造器，指向的是构造函数 `（对 null、undefined 无效）`
+
+```js
+let num = 1,str = '',obj = {}
+
+num.__proto__.constructor === Number // true
+num.__proto__.constructor === Object // false
+
+str.__proto__.constructor === String // true
+obj.__proto__.constructor === Object // true
+```
+
+## Object.prototype.toString (最严谨的方法)
+
+> 内置转换方法判断类型
+
+```js
+var num = 1
+var str = 'abc'
+var arr = []
+var obj = {}
+var nul = null
+var unde
+var bool = true
+var foo = function(){}
+
+Object.prototype.toString() // [object Object]
+Object.prototype.toString.call(str) // [object String]
+Object.prototype.toString.call(num) // [object Number]
+Object.prototype.toString.call(arr) // [object Array]
+Object.prototype.toString.call(obj) // [object Object]
+Object.prototype.toString.call(nul) // [object Null]
+Object.prototype.toString.call(unde) // [object Undefined]
+Object.prototype.toString.call(bool) // [object Boolean]
+Object.prototype.toString.call(foo) // [object Function]
+
+```
