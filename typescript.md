@@ -13,6 +13,36 @@ type IValue = `${ENUM_TYPE}`  // 'all' | 'some' | 'little'
 // 获取枚举的 key
 type IKey = keyof typeof ENUM_TYPE  // 'ALL' | 'SOME' | 'LITTLE'
 
+
+// --------------------PICK & PARTIAL-------------------
+type a = {
+  name: string
+  age: number
+  sex: string
+}
+
+type b = Partial<a> // { name?: string ,age?: number,sex?: string }
+
+type d = Pick<a,'name'|'age'> // { name: string ,age: number }
+
+
+// -------------------- Exclude针对联合类型里面排除某一个或几个 -------------------
+
+type A = 'a' | 'b' | 'c';
+type B = 'a' | 'd';
+
+type C = Exclude<A, B>;  // 'b' | 'c'
+
+
+// ------------------- Omit针对对象属性里面排除某一个或几个属性 --------------------
+
+type Person = {
+  name: string
+  age: number
+}
+
+type p = Omit<Person,'name'> // { age: number }
+
 ```
 
 + 2023.04.08 已更新
